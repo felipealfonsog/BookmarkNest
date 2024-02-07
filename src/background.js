@@ -10,7 +10,6 @@ setInterval(function() {
 
 function backupBookmarks(directory) {
     var bookmarksHTML = generateHTML();
-
     var dateTime = getCurrentDateTime();
     var fileName = 'bookmarks-' + dateTime + '.html';
 
@@ -19,8 +18,13 @@ function backupBookmarks(directory) {
     chrome.fileSystem.getWritableEntry(directory, function(directoryEntry) {
         directoryEntry.getFile(fileName, { create: true }, function(fileEntry) {
             fileEntry.createWriter(function(fileWriter) {
+                fileWriter.onwriteend = function() {
+                    console.log('Bookmark backup saved in:', directory + '/' + fileName);
+                };
+                fileWriter.onerror = function(e) {
+                    console.error('Error saving bookmark backup:', e);
+                };
                 fileWriter.write(blob);
-                console.log('Bookmark backup saved in:', directory + '/' + fileName);
             });
         });
     });
