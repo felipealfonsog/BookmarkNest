@@ -1,0 +1,26 @@
+{
+  "name": "BookmarkNest",
+  "version": "1.0.1",
+  "description": "BookmarkNest: Easily save and organize your bookmarks in the cloud or locally with this Chrome extension.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/felipealfonsog/BookmarkNest.git"
+  },
+  "keywords": [
+    "bookmarks",
+    "bookmarking",
+    "organize",
+    "cloud",
+    "local storage",
+    "chrome",
+    "store",
+    "extension"
+  ],
+  "author": "Felipe Alfonso González",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/felipealfonsog/BookmarkNest/issues"
+  },
+  "homepage": "https://github.com/felipealfonsog/BookmarkNest"
+}
+, , , , , 
