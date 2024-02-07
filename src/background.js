@@ -24,13 +24,28 @@ function backupBookmarks(directory) {
 }
 
 function generateHTML() {
-    // Generate HTML content from Chrome bookmarks
-    // Implementation of this function depends on how you want to format the bookmarks
-    // You can use chrome.bookmarks API to retrieve bookmarks and format them as HTML
-    // For simplicity, let's assume bookmarksHTML is a string containing HTML content
-    var bookmarksHTML = '<!DOCTYPE html><html><head><title>Bookmarks</title></head><body><h1>Bookmarks</h1><ul><li>Bookmark 1</li><li>Bookmark 2</li></ul></body></html>';
+    var bookmarksHTML = '<!DOCTYPE html><html><head><title>Bookmarks</title></head><body><h1>Bookmarks</h1><ul>';
+
+    chrome.bookmarks.getTree(function(bookmarkTreeNodes) {
+        processNodes(bookmarkTreeNodes);
+        bookmarksHTML += '</ul></body></html>';
+    });
+
     return bookmarksHTML;
 }
+
+function processNodes(nodes) {
+    nodes.forEach(function(node) {
+        if (node.children) {
+            bookmarksHTML += '<li>' + node.title + '<ul>';
+            processNodes(node.children);
+            bookmarksHTML += '</ul></li>';
+        } else if (node.url) {
+            bookmarksHTML += '<li><a href="' + node.url + '">' + node.title + '</a></li>';
+        }
+    });
+}
+
 
 function getCurrentDateTime() {
     // Generate current date and time string

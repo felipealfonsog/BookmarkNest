@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "BookmarkNest",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Automatically save and organize your bookmarks in the cloud or locally with this Chrome extension.",
   "permissions": ["downloads", "bookmarks", "storage"],
   "background": {
