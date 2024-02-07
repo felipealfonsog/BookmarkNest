@@ -1,24 +1,28 @@
-
-
 {
   "manifest_version": 3,
   "name": "BookmarkNest",
   "version": "1.0.1",
   "description": "BookmarkNest: Easily save and organize your bookmarks in the cloud or locally with this Chrome extension.",
   "homepage_url": "https://github.com/felipealfonsog/BookmarkNest",
+  "permissions": ["storage", "fileSystem"],
+  "action": {
+    "default_popup": "src/popup.html"
+  },
+  "options_ui": {
+    "page": "src/options.html"
+  },
   "icons": {
     "16": "images/icon-16x16.png",
     "48": "images/icon-32x32.png",
     "128": "images/icon-120x120.png"
   },
-  "action": {
-    "matches": ["<all_urls>"],
-    "run_at": "document_start",
-    "all_frames": true,
-    "js": ["src/bookmark-sync.js"]
-  }
+  "background": {
+    "service_worker": "src/background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["src/bookmark-sync.js"]
+    }
+  ]
 }
-
-
-
-
