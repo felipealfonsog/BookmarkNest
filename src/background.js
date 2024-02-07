@@ -13,22 +13,26 @@ function backupBookmarks(directory) {
     var dateTime = getCurrentDateTime();
     var fileName = 'bookmarks-' + dateTime + '.html';
 
-    chrome.downloads.download({
-        url: 'data:text/html;charset=utf-8,' + encodeURIComponent(bookmarksHTML),
-        filename: directory + '/' + fileName,
-        saveAs: false,
-        conflictAction: 'overwrite'
-    }, function(downloadId) {
-        console.log('Bookmark backup saved. Download ID:', downloadId);
+    var blob = new Blob([bookmarksHTML], { type: 'text/html;charset=utf-8' });
+
+    chrome.fileSystem.getWritableEntry(directory, function(directoryEntry) {
+        directoryEntry.getFile(fileName, { create: true }, function(fileEntry) {
+            fileEntry.createWriter(function(fileWriter) {
+                fileWriter.write(blob);
+                console.log('Bookmark backup saved in:', directory + '/' + fileName);
+            });
+        });
     });
 }
 
 function generateHTML() {
-    var bookmarksHTML = '<!DOCTYPE html><html><head><title>Bookmarks</title></head><body><h1>Bookmarks</h1><ul>';
+    var bookmarksHTML = '<!DOCTYPE NETSCAPE-Bookmark-file-1>\n' +
+                        '<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">\n' +
+                        '<TITLE>Bookmarks</TITLE>\n<DL><p>\n';
 
     chrome.bookmarks.getTree(function(bookmarkTreeNodes) {
         processNodes(bookmarkTreeNodes);
-        bookmarksHTML += '</ul></body></html>';
+        bookmarksHTML += '</DL><p>\n';
     });
 
     return bookmarksHTML;
@@ -37,15 +41,14 @@ function generateHTML() {
 function processNodes(nodes) {
     nodes.forEach(function(node) {
         if (node.children) {
-            bookmarksHTML += '<li>' + node.title + '<ul>';
+            bookmarksHTML += '<DT><H3>' + node.title + '</H3>\n<DL><p>\n';
             processNodes(node.children);
-            bookmarksHTML += '</ul></li>';
+            bookmarksHTML += '</DL><p>\n';
         } else if (node.url) {
-            bookmarksHTML += '<li><a href="' + node.url + '">' + node.title + '</a></li>';
+            bookmarksHTML += '<DT><A HREF="' + node.url + '">' + node.title + '</A>\n';
         }
     });
 }
-
 
 function getCurrentDateTime() {
     // Generate current date and time string
