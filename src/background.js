@@ -10,6 +10,7 @@ setInterval(function() {
 
 function backupBookmarks(directory) {
     var bookmarksHTML = generateHTML();
+
     var dateTime = getCurrentDateTime();
     var fileName = 'bookmarks-' + dateTime + '.html';
 
@@ -31,18 +32,18 @@ function generateHTML() {
                         '<TITLE>Bookmarks</TITLE>\n<DL><p>\n';
 
     chrome.bookmarks.getTree(function(bookmarkTreeNodes) {
-        processNodes(bookmarkTreeNodes);
+        processNodes(bookmarkTreeNodes, bookmarksHTML);
         bookmarksHTML += '</DL><p>\n';
     });
 
     return bookmarksHTML;
 }
 
-function processNodes(nodes) {
+function processNodes(nodes, bookmarksHTML) {
     nodes.forEach(function(node) {
         if (node.children) {
             bookmarksHTML += '<DT><H3>' + node.title + '</H3>\n<DL><p>\n';
-            processNodes(node.children);
+            processNodes(node.children, bookmarksHTML);
             bookmarksHTML += '</DL><p>\n';
         } else if (node.url) {
             bookmarksHTML += '<DT><A HREF="' + node.url + '">' + node.title + '</A>\n';
@@ -51,8 +52,6 @@ function processNodes(nodes) {
 }
 
 function getCurrentDateTime() {
-    // Generate current date and time string
-    // Implementation depends on the desired format
     var now = new Date();
     var year = now.getFullYear();
     var month = String(now.getMonth() + 1).padStart(2, '0');
