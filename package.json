@@ -1,29 +1,26 @@
 {
-  "name": "disable-scroll-wheel-zoom",
-  "version": "1.1.0",
-  "description": "Disables the ctrl + scroll wheel zoom shortcut in Chrome.",
+  "name": "BookmarkNest",
+  "version": "1.0.1",
+  "description": "BookmarkNest: Easily save and organize your bookmarks in the cloud or locally with this Chrome extension.",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/phparkle/disable-scroll-wheel-zoom.git"
+    "url": "git+https://github.com/felipealfonsog/BookmarkNest.git"
   },
   "keywords": [
-    "mouse",
-    "wheel",
-    "scroll",
-    "ctrl",
-    "control",
+    "bookmarks",
+    "bookmarking",
+    "organize",
+    "cloud",
+    "local storage",
     "chrome",
-    "web",
     "store",
-    "extension",
-    "disable",
-    "no",
-    "lock"
+    "extension"
   ],
-  "author": "Parkle Lee",
-  "license": "ISC",
+  "author": "Felipe Alfonso González",
+  "license": "BSD-3-Clause",
   "bugs": {
-    "url": "https://github.com/phparkle/disable-scroll-wheel-zoom/issues"
+    "url": "https://github.com/felipealfonsog/BookmarkNest/issues"
   },
-  "homepage": "https://github.com/phparkle/disable-scroll-wheel-zoom#readme"
+  "homepage": "https://github.com/felipealfonsog/BookmarkNest"
 }
+, , , , , 
