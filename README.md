@@ -2,8 +2,9 @@
 
 BookmarkNest is a Chrome extension that allows you to easily save and organize your bookmarks either in the cloud or locally.
 
-<img src="images/logo.png" alt="Logo" width="250">
+<img src="images/logo.png" alt="Logo" width="70">
 
+<!-- 
 <sub>
 
 You can try out the extension on the [Chrome Web Store](https://chromewebstore.google.com/detail/bookmarknest_extension_id?hl=en&authuser=1).
@@ -12,6 +13,7 @@ You can try out the extension on the [Chrome Web Store](https://chromewebstore.g
 </sub>
 
 [![Chrome Web Store](https://img.shields.io/chrome-web-store/v/bookmarknest_extension_id.svg?style=flat-square&label=Chrome%20Web%20Store&logo=google-chrome&logoColor=white)](https://chromewebstore.google.com/detail/bookmarknest_extension_id?hl=en&authuser=1)
+-->
 
 #### Description
 
