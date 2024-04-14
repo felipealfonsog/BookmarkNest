@@ -1,67 +1,48 @@
-// Perform backup every minute
-setInterval(function() {
-    chrome.storage.local.get('selectedDirectory', function(data) {
-        var selectedDirectory = data.selectedDirectory;
-        if (selectedDirectory) {
-            backupBookmarks(selectedDirectory);
-        }
+chrome.runtime.onInstalled.addListener(function() {
+    // Set default backup interval to 60 minutes
+    chrome.storage.local.set({
+        'backupInterval': 60
     });
-}, 60000);
+});
 
-function backupBookmarks(directory) {
-    var bookmarksHTML = generateHTML();
-    var dateTime = getCurrentDateTime();
-    var fileName = 'bookmarks-' + dateTime + '.html';
+// Schedule periodic backup
+chrome.alarms.onAlarm.addListener(function(alarm) {
+    if (alarm.name === 'backup') {
+        chrome.bookmarks.getTree(function(bookmarkTreeNodes) {
+            var bookmarks = JSON.stringify(bookmarkTreeNodes);
 
-    var blob = new Blob([bookmarksHTML], { type: 'text/html;charset=utf-8' });
-
-    chrome.fileSystem.getWritableEntry(directory, function(directoryEntry) {
-        directoryEntry.getFile(fileName, { create: true }, function(fileEntry) {
-            fileEntry.createWriter(function(fileWriter) {
-                fileWriter.onwriteend = function() {
-                    console.log('Bookmark backup saved in:', directory + '/' + fileName);
-                };
-                fileWriter.onerror = function(e) {
-                    console.error('Error saving bookmark backup:', e);
-                };
-                fileWriter.write(blob);
+            chrome.storage.local.get('backupDirectory', function(data) {
+                var backupDirectory = data.backupDirectory;
+                if (backupDirectory) {
+                    chrome.downloads.download({
+                        url: 'data:text/plain;charset=utf-8,' + encodeURIComponent(bookmarks),
+                        filename: backupDirectory + '/bookmarks_backup_' + Date.now() + '.json',
+                        saveAs: false
+                    }, function(downloadId) {
+                        console.log('Backup saved:', downloadId);
+                    });
+                }
             });
         });
-    });
+    }
+});
+
+// Listen for changes in backup interval
+chrome.storage.onChanged.addListener(function(changes, namespace) {
+    if (changes.backupInterval && namespace === 'local') {
+        var newInterval = changes.backupInterval.newValue;
+        scheduleBackup(newInterval);
+    }
+});
+
+// Function to schedule periodic backup
+function scheduleBackup(intervalInMinutes) {
+    chrome.alarms.clear('backup');
+    chrome.alarms.create('backup', { periodInMinutes: parseInt(intervalInMinutes) });
 }
 
-function generateHTML() {
-    var bookmarksHTML = '<!DOCTYPE NETSCAPE-Bookmark-file-1>\n' +
-                        '<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">\n' +
-                        '<TITLE>Bookmarks</TITLE>\n<DL><p>\n';
-
-    chrome.bookmarks.getTree(function(bookmarkTreeNodes) {
-        processNodes(bookmarkTreeNodes, bookmarksHTML);
-        bookmarksHTML += '</DL><p>\n';
-    });
-
-    return bookmarksHTML;
-}
-
-function processNodes(nodes, bookmarksHTML) {
-    nodes.forEach(function(node) {
-        if (node.children) {
-            bookmarksHTML += '<DT><H3>' + node.title + '</H3>\n<DL><p>\n';
-            processNodes(node.children, bookmarksHTML);
-            bookmarksHTML += '</DL><p>\n';
-        } else if (node.url) {
-            bookmarksHTML += '<DT><A HREF="' + node.url + '">' + node.title + '</A>\n';
-        }
-    });
-}
-
-function getCurrentDateTime() {
-    var now = new Date();
-    var year = now.getFullYear();
-    var month = String(now.getMonth() + 1).padStart(2, '0');
-    var day = String(now.getDate()).padStart(2, '0');
-    var hour = String(now.getHours()).padStart(2, '0');
-    var minute = String(now.getMinutes()).padStart(2, '0');
-    var second = String(now.getSeconds()).padStart(2, '0');
-    return year + month + day + '_' + hour + minute + second;
-}
+// Initial setup to schedule backup
+chrome.storage.local.get('backupInterval', function(data) {
+    var interval = data.backupInterval || 60; // Default to 60 minutes
+    scheduleBackup(interval);
+});

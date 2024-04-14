@@ -3,11 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Select Directory</title>
+    <title>BookmarkNest Options</title>
 </head>
 <body>
-    <h1>Select Directory</h1>
-    <input type="file" id="directoryInput" directory webkitdirectory>
-    <script src="../src/options.js"></script>
+    <h1>BookmarkNest Options</h1>
+    <p>Customize your BookmarkNest settings here:</p>
+    <!-- Option: Dark Theme -->
+    <label for="darkThemeCheckbox">
+        <input type="checkbox" id="darkThemeCheckbox">
+        Dark Theme
+    </label>
+    <br>
+    <!-- Option: Automatic Backup Interval -->
+    <label for="backupIntervalSelect">
+        Automatic Backup Interval:
+        <select id="backupIntervalSelect">
+            <option value="15">Every 15 minutes</option>
+            <option value="30">Every 30 minutes</option>
+            <option value="60">Every hour</option>
+            <option value="0">Manual Only</option>
+        </select>
+    </label>
+    <!-- Include other options here -->
+    <script src="options.js"></script>
 </body>
 </html>
