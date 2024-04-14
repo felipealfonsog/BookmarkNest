@@ -1,13 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Select Directory</title>
+  <title>BookmarkNest Options</title>
+  <script src="options.js"></script>
 </head>
 <body>
-    <h1>Select Directory</h1>
-    <input type="file" id="directoryInput" directory webkitdirectory>
-    <script src="../src/options.js"></script>
+  <h1>BookmarkNest Options</h1>
+  <label for="interval">Auto-save interval (minutes):</label>
+  <input type="number" id="interval" value="30">
+  <br>
+  <label for="cloud">Save to:</label>
+  <select id="cloud">
+    <option value="none">None</option>
+    <option value="onedrive">OneDrive</option>
+    <option value="dropbox">Dropbox</option>
+    <option value="local">Local</option>
+  </select>
+
+  <!-- En tu archivo options.html -->
+<button id="authorizeOneDriveBtn">Authorize OneDrive</button>
+
+
+
+  <br>
+  <button id="save">Save</button>
 </body>
 </html>

@@ -1,40 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BookmarkNest Backup</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
-            margin: 0;
-            padding: 20px;
-        }
-
-        button {
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-        }
-    </style>
+  <title>Popup</title>
+  <script src="popup.js"></script>
 </head>
 <body>
-    <div class="container">
-        <h1>BookmarkNest Backup</h1>
-        <p>Select a directory to save bookmark backups:</p>
-        <button id="openDirectoryBtn">Select Directory</button>
-
-    </div>
-    <script src="popup.js"></script>
+  <h1>BookmarkNest</h1>
+  <button id="authorizeOneDriveBtn">Authorize OneDrive</button>
+  <button id="authorizeDropboxBtn">Authorize Dropbox</button>
+  <button id="authorizeLocalBtn">Authorize Local</button>
 </body>
 </html>
