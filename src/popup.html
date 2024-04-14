@@ -1,13 +1,23 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Popup</title>
-  <script src="popup.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookmarkNest</title>
 </head>
 <body>
-  <h1>BookmarkNest</h1>
-  <button id="authorizeOneDriveBtn">Authorize OneDrive</button>
-  <button id="authorizeDropboxBtn">Authorize Dropbox</button>
-  <button id="authorizeLocalBtn">Authorize Local</button>
+    <h2>Backup Settings</h2>
+    <label for="backupInterval">Backup Interval (minutes):</label>
+    <input type="number" id="backupInterval" min="1" value="60">
+    <br><br>
+    <label for="backupDirectory">Backup Directory:</label>
+    <input type="file" id="backupDirectory" webkitdirectory directory multiple>
+    <br><br>
+    <div id="selectedDirectory">No directory selected</div>
+    <br><br>
+    
+    <button id="saveSettingsBtn">Save Settings</button>
+
+    <script src="popup.js"></script>
 </body>
 </html>

@@ -1,113 +1,68 @@
 document.addEventListener('DOMContentLoaded', function() {
-    var authorizeOneDriveBtn = document.getElementById('authorizeOneDriveBtn');
-    var authorizeDropboxBtn = document.getElementById('authorizeDropboxBtn');
-    var authorizeLocalBtn = document.getElementById('authorizeLocalBtn');
-    
-    if (authorizeOneDriveBtn) {
-        authorizeOneDriveBtn.addEventListener('click', function() {
-            // Lógica para solicitar autorización en OneDrive
-            requestAuthorization('onedrive');
-        });
-    }
+    var backupIntervalInput = document.getElementById('backupInterval');
+    var backupDirectoryInput = document.getElementById('backupDirectory');
+    var saveSettingsBtn = document.getElementById('saveSettingsBtn');
+    var selectedDirectoryMsg = document.getElementById('selectedDirectory');
 
-    if (authorizeDropboxBtn) {
-        authorizeDropboxBtn.addEventListener('click', function() {
-            // Lógica para solicitar autorización en Dropbox
-            requestAuthorization('dropbox');
-        });
-    }
-
-    if (authorizeLocalBtn) {
-        authorizeLocalBtn.addEventListener('click', function() {
-            // Lógica para solicitar autorización local
-            requestAuthorization('local');
-        });
-    }
-});
-
-function requestAuthorization(provider) {
-    switch (provider) {
-        case 'onedrive':
-            // Lógica para solicitar autorización en OneDrive
-            break;
-        case 'dropbox':
-            // Lógica para solicitar autorización en Dropbox
-            break;
-        case 'local':
-            // Lógica para solicitar autorización local
-            break;
-        default:
-            console.error('Proveedor de autorización no válido.');
-            break;
-    }
-}
-
-
-
-// En tu archivo popup.js
-
-document.getElementById('authorizeOneDriveBtn').addEventListener('click', function() {
-    // Redirige al usuario a la página de autorización de OneDrive
-    chrome.identity.launchWebAuthFlow({
-        url: 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=TU_CLIENT_ID&response_type=token&redirect_uri=YOUR_REDIRECT_URI&scope=files.readwrite.all',
-        interactive: true
-    }, function(redirectUrl) {
-        // Extrae el token de acceso del redirectUrl
-        var accessToken = extractAccessToken(redirectUrl);
-        
-        // Lógica para crear la carpeta en OneDrive
-        createFolderInOneDrive(accessToken);
-    });
-});
-
-function extractAccessToken(url) {
-    // Lógica para extraer el token de acceso del redirectUrl
-}
-
-function createFolderInOneDrive(accessToken) {
-    // Lógica para crear la carpeta "bookmarknest-1.0" en OneDrive
-}
-
-
-// Dentro de las funciones extractAccessToken y createFolderInOneDrive en popup.js
-
-function extractAccessToken(url) {
-    var hashIndex = url.indexOf('#');
-    if (hashIndex !== -1) {
-        var hashParams = url.substring(hashIndex + 1);
-        var params = new URLSearchParams(hashParams);
-        return params.get('access_token');
-    }
-    return null;
-}
-
-function createFolderInOneDrive(accessToken) {
-    var folderName = "bookmarknest-1.0";
-    var url = "https://graph.microsoft.com/v1.0/me/drive/root/children";
-    var requestBody = {
-        "name": folderName,
-        "folder": { }
-    };
-
-    fetch(url, {
-        method: "POST",
-        headers: {
-            "Authorization": "Bearer " + accessToken,
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(requestBody)
-    })
-    .then(response => {
-        if (response.ok) {
-            console.log("Folder created successfully in OneDrive.");
-            alert("Folder created successfully in OneDrive.");
-        } else {
-            console.error("Failed to create folder in OneDrive.");
-            alert("Failed to create folder in OneDrive.");
+    // Cargar configuraciones guardadas al cargar la página
+    chrome.storage.local.get(['backupInterval', 'backupDirectory'], function(data) {
+        if (data.backupInterval) {
+            backupIntervalInput.value = data.backupInterval;
         }
-    })
-    .catch(error => {
-        console.error("Error creating folder in OneDrive:", error);
-        alert("Error creating folder in OneDrive:", error);
+        if (data.backupDirectory) {
+            backupDirectoryInput.value = data.backupDirectory;
+            selectedDirectoryMsg.textContent = 'Backup directory: ' + data.backupDirectory;
+        }
     });
-}
+
+    // Botón para seleccionar directorio
+    backupDirectoryInput.addEventListener('change', function() {
+        if (backupDirectoryInput.files && backupDirectoryInput.files.length > 0) {
+            selectedDirectoryMsg.textContent = 'Backup directory: ' + backupDirectoryInput.files[0].path;
+        } else {
+            selectedDirectoryMsg.textContent = 'No directory selected';
+        }
+    });
+
+    // Botón para guardar configuraciones
+    saveSettingsBtn.addEventListener('click', function() {
+        // Obtener valores de entrada
+        var backupInterval = parseInt(backupIntervalInput.value);
+        var backupDirectory = '';
+
+        // Validar intervalo de backup
+        if (isNaN(backupInterval) || backupInterval < 1) {
+            alert('Please enter a valid backup interval (minutes).');
+            return;
+        }
+
+        // Validar directorio de backup
+        if (backupDirectoryInput.files && backupDirectoryInput.files.length > 0) {
+            backupDirectory = backupDirectoryInput.files[0].path;
+        } else {
+            alert('Please select a backup directory.');
+            return;
+        }
+
+        // Guardar configuraciones
+        saveBackupSettings(backupInterval, backupDirectory);
+    });
+
+    // Función para guardar configuraciones
+    function saveBackupSettings(interval, directory) {
+        chrome.storage.local.set({
+            'backupInterval': interval,
+            'backupDirectory': directory
+        }, function() {
+            // Mostrar mensaje de éxito
+            showMessage('Settings saved successfully.');
+            // Actualizar el mensaje del directorio seleccionado en la interfaz
+            selectedDirectoryMsg.textContent = 'Backup directory: ' + directory;
+        });
+    }
+
+    // Función para mostrar mensajes
+    function showMessage(message) {
+        alert(message);
+    }
+});

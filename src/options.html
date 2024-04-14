@@ -1,28 +1,30 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>BookmarkNest Options</title>
-  <script src="options.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookmarkNest Options</title>
 </head>
 <body>
-  <h1>BookmarkNest Options</h1>
-  <label for="interval">Auto-save interval (minutes):</label>
-  <input type="number" id="interval" value="30">
-  <br>
-  <label for="cloud">Save to:</label>
-  <select id="cloud">
-    <option value="none">None</option>
-    <option value="onedrive">OneDrive</option>
-    <option value="dropbox">Dropbox</option>
-    <option value="local">Local</option>
-  </select>
-
-  <!-- En tu archivo options.html -->
-<button id="authorizeOneDriveBtn">Authorize OneDrive</button>
-
-
-
-  <br>
-  <button id="save">Save</button>
+    <h1>BookmarkNest Options</h1>
+    <p>Customize your BookmarkNest settings here:</p>
+    <!-- Option: Dark Theme -->
+    <label for="darkThemeCheckbox">
+        <input type="checkbox" id="darkThemeCheckbox">
+        Dark Theme
+    </label>
+    <br>
+    <!-- Option: Automatic Backup Interval -->
+    <label for="backupIntervalSelect">
+        Automatic Backup Interval:
+        <select id="backupIntervalSelect">
+            <option value="15">Every 15 minutes</option>
+            <option value="30">Every 30 minutes</option>
+            <option value="60">Every hour</option>
+            <option value="0">Manual Only</option>
+        </select>
+    </label>
+    <!-- Include other options here -->
+    <script src="options.js"></script>
 </body>
 </html>
